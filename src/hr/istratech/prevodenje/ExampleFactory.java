@@ -3,6 +3,7 @@ package hr.istratech.prevodenje;
 import hr.istratech.prevodenje.examples.FormCodePrinter;
 import hr.istratech.prevodenje.examples.FormPropertiesPrinter;
 import hr.istratech.prevodenje.examples.reports.GenerirajRex;
+import hr.istratech.prevodenje.examples.reports.ReportExtractMessages;
 import hr.istratech.prevodenje.examples.reports.ReportRosstringExtractor;
 import hr.istratech.prevodenje.examples.simple.FormNameChanger;
 import hr.istratech.prevodenje.examples.simple.FormNamePrinter;
@@ -31,21 +32,31 @@ public class ExampleFactory {
             return getReportRexGeneratorExample(sourcePath, aplikacija);
         if (exampleType.equals(ExampleType.REPORT_LABEL_EXTRACTOR))
             return getReportLabelExtractorExample(sourcePath, aplikacija);
+        if (exampleType.equals(ExampleType.REPORT_EXTRACT_MESSAGES))
+            return getReportExtractMessagesExample(sourcePath, aplikacija);
 
         return null;
     }
 
+    private static CommandExecutor getReportExtractMessagesExample(File sourcePath, String aplikacija) {
+        ReportExtractMessages reportExtractMessages = new ReportExtractMessages(sourcePath, aplikacija);
+        reportExtractMessages.setReport(true);
+        reportExtractMessages.setFormName("rec2250.rex");
+        return reportExtractMessages;
+    }
+
+
     private static CommandExecutor getReportLabelExtractorExample(File sourcePath, String aplikacija) {
-        GenerirajRex generirajRex = new GenerirajRex(sourcePath, aplikacija);
-        generirajRex.setReport(true);
-        return generirajRex;
+        ReportRosstringExtractor reportRosstringExtractor = new ReportRosstringExtractor(sourcePath, aplikacija);
+        reportRosstringExtractor.setReport(true);
+        reportRosstringExtractor.setFormName("rec5010.rex");
+        return reportRosstringExtractor;
     }
 
     private static CommandExecutor getReportRexGeneratorExample(File sourcePath, String aplikacija) {
-        ReportRosstringExtractor reportRosstringExtractor = new ReportRosstringExtractor(sourcePath, aplikacija);
-        reportRosstringExtractor.setReport(true);
-        reportRosstringExtractor.setFormName("pka5010.rex");
-        return reportRosstringExtractor;
+        GenerirajRex generirajRex = new GenerirajRex(sourcePath, aplikacija);
+        generirajRex.setReport(true);
+        return generirajRex;
     }
 
     private static CommandExecutor getFormPropertiesPrinterExample(File sourcePath, String aplikacija) {

@@ -2,10 +2,12 @@ package hr.istratech.prevodenje.examples.reports;
 
 import hr.istratech.prevodenje.CommandExecutor;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.util.ArrayList;
 
 /**
  * Created by dbursic on 5.10.2017..
@@ -16,40 +18,33 @@ public class ReportRosstringExtractor extends CommandExecutor {
         super(sourcePath, aplikacija);
     }
 
-    public static String convertToUnicodeString(String hexString) {
-        StringBuilder output = new StringBuilder();
-        hexString = hexString.replaceAll(" ", "");
+    /*
+        input : "æÆŽžèÈÐðŠš";
+        output : "e6c68e9ee8c8d0f08a9a";
+    */
+    public String toHexString(byte[] ba) {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < ba.length; i++)
+            str.append(String.format("%x", ba[i]));
+        return str.toString();
+    }
 
-        for (int i = 0; i < hexString.length(); i = i + 2) {
+    /*
+        input : "e6c68e9ee8c8d0f08a9a";
+        output : "æÆŽžèÈÐðŠš";
+    */
+    public String convertToStringFromHexadecimal(String hexString) throws CharacterCodingException {
+        String hex = hexString.replaceAll(" ", "");
+        byte byteArray[] = new byte[hex.length() / 2];
 
-            String keyCode = hexString.substring(i, i + 2);
-
-            if (keyCode.equals("00"))
-                break;
-            if (keyCode.equals("e6"))    //e8
-                output.append("æ");
-            else if (keyCode.equals("c6"))    //c8
-                output.append("Æ");
-            else if (keyCode.equals("8e"))
-                output.append("Ž");
-            else if (keyCode.equals("9e"))
-                output.append("ž");
-            else if (keyCode.equals("e8"))
-                output.append("è");
-            else if (keyCode.equals("c8"))
-                output.append("È");
-            else if (keyCode.equals("d0"))
-                output.append("Ð");
-            else if (keyCode.equals("f0"))
-                output.append("ð");
-            else if (keyCode.equals("8a"))
-                output.append("Š");
-            else if (keyCode.equals("9a"))
-                output.append("š");
-            else
-                output.append((char) Integer.parseInt(keyCode, 16));
+        for (int i = 0; i < hex.length(); i += 2) {
+            String substring = hex.substring(i, i + 2);
+            byteArray[i / 2] = new Integer(Integer.parseInt(substring, 16)).byteValue();
         }
-        return output.toString();
+
+        CharsetDecoder decoder = Charset.defaultCharset().newDecoder();
+        ByteBuffer buffer = ByteBuffer.wrap(byteArray);
+        return decoder.decode(buffer).toString();
     }
 
 
@@ -91,9 +86,9 @@ public class ReportRosstringExtractor extends CommandExecutor {
                         pom = br.readLine();
                     }
 
-                    String hex = convertToUnicodeString(newLine.trim());
+                    String hex = convertToStringFromHexadecimal(newLine.trim());
 
-                    System.out.println(hex);
+                    System.out.println("Report: " + name + " Labela: " + hex);
                 }
             }
             br.close();
@@ -103,10 +98,13 @@ public class ReportRosstringExtractor extends CommandExecutor {
 
     }
 
+
     public static void main(String[] args) {
+
         ReportRosstringExtractor reportRosstringExtractor = new ReportRosstringExtractor(new File("D:\\mish_cvs\\misH_moduli"), "PKA");
         reportRosstringExtractor.setReport(true);
 
         reportRosstringExtractor.execute("rec5010.rex");
+
     }
 }
