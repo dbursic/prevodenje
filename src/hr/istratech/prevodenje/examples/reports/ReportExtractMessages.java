@@ -48,15 +48,9 @@ public class ReportExtractMessages extends CommandExecutor {
                                     "CP1250"));
 
             while ((thisLine = br.readLine()) != null) {
-                if (thisLine.startsWith("DEFINE  SRW2_QUERY"))
+                if (thisLine.startsWith("DEFINE  SRW2_QUERY") || thisLine.startsWith("DEFINE  TOOL_PLSQL"))
                     startDefine = true;
-                if (thisLine.startsWith("DEFINE  TOOL_PLSQL"))
-                    startDefine = true;
-                if ((thisLine.toUpperCase().contains("<<\"SELECT")) && startDefine)
-                    startCode = true;
-                if ((thisLine.contains("<<\"function")) && startDefine)
-                    startCode = true;
-                if ((thisLine.contains("<<\"FUNCTION") || thisLine.contains("<<\"procedure") || thisLine.contains("<<\"PROCEDURE")) && startDefine)
+                if ((thisLine.toUpperCase().contains("<<\"SELECT") || thisLine.toUpperCase().contains("<<\"FUNCTION") || thisLine.toUpperCase().contains("<<\"PROCEDURE")) && startDefine)
                     startCode = true;
 
                 if (startCode)
