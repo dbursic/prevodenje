@@ -42,7 +42,7 @@ public class Main {
          Korak 3. Dohvati poruke u reportima
 */
 
-        CommandExecutor example = ExampleFactory.getExample(ExampleType.FORM_NAME_PRINTER, aplikacija, sourcePath, targetPath, connectionProvider);
+        CommandExecutor example = ExampleFactory.getExample(ExampleType.REPORT_EXTRACT_MESSAGES, aplikacija, sourcePath, targetPath, connectionProvider);
         example.execute();
 
     }
