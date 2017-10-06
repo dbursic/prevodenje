@@ -1,6 +1,6 @@
 package hr.istratech.prevodenje.examples.simple;
 
-import hr.istratech.prevodenje.FormCommandExecutor;
+import hr.istratech.prevodenje.CommandExecutor;
 import hr.istratech.prevodenje.persistence.ConnectionProvider;
 import hr.istratech.prevodenje.persistence.OracleService;
 import oracle.forms.jdapi.FormModule;
@@ -11,7 +11,7 @@ import java.io.File;
 /**
  * Created by dbursic on 3.10.2017..
  */
-public class FormNameSaver extends FormCommandExecutor {
+public class FormNameSaver extends CommandExecutor {
     OracleService oracleService;
 
     public FormNameSaver(File sourcePath, String aplikacija, ConnectionProvider connectionProvider) {

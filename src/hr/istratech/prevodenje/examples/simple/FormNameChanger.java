@@ -1,6 +1,6 @@
 package hr.istratech.prevodenje.examples.simple;
 
-import hr.istratech.prevodenje.FormCommandExecutor;
+import hr.istratech.prevodenje.CommandExecutor;
 import oracle.forms.jdapi.FormModule;
 import oracle.forms.jdapi.Jdapi;
 
@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * Created by dbursic on 3.10.2017..
  */
-public class FormNameChanger extends FormCommandExecutor {
+public class FormNameChanger extends CommandExecutor {
 
     public FormNameChanger(File sourcePath, File targetPath, String aplikacija) {
         super(sourcePath, targetPath, aplikacija);

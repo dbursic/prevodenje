@@ -1,16 +1,14 @@
 package hr.istratech.prevodenje.examples;
 
-import hr.istratech.prevodenje.FormCommandExecutor;
+import hr.istratech.prevodenje.CommandExecutor;
 import oracle.forms.jdapi.*;
 
 import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by dbursic on 3.10.2017..
  */
-public class FormCodePrinter extends FormCommandExecutor {
+public class FormCodePrinter extends CommandExecutor {
     public FormCodePrinter(File sourcePath, String aplikacija) {
         super(sourcePath, aplikacija);
     }
@@ -44,6 +42,7 @@ public class FormCodePrinter extends FormCommandExecutor {
     private void printTriggerNameAndText(Trigger trigger, String name) {
         System.out.println("Trigger: " + trigger.getName());
     }
+
 
     private void printItemLevelTriggers(FormModule formModule) {
         JdapiIterator blocks = formModule.getBlocks();  //  To navigate to all the Blocks

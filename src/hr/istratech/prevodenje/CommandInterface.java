@@ -3,7 +3,7 @@ package hr.istratech.prevodenje;
 /**
  * Created by dbursic on 3.10.2017..
  */
-public interface FormCommandInterface {
+public interface CommandInterface {
 
     void execute();
 

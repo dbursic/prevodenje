@@ -1,6 +1,6 @@
 package hr.istratech.prevodenje.examples;
 
-import hr.istratech.prevodenje.FormCommandExecutor;
+import hr.istratech.prevodenje.CommandExecutor;
 import oracle.forms.jdapi.*;
 
 import java.io.File;
@@ -8,7 +8,7 @@ import java.io.File;
 /**
  * Created by dbursic on 3.10.2017..
  */
-public class FormPropertiesPrinter extends FormCommandExecutor {
+public class FormPropertiesPrinter extends CommandExecutor {
 
     public FormPropertiesPrinter(File sourcePath, String aplikacija) {
         super(sourcePath, aplikacija);
