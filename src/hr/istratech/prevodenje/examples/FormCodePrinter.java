@@ -36,7 +36,7 @@ public class FormCodePrinter extends CommandExecutor {
     }
 
     private void printProgramUnitNameAndText(ProgramUnit progUnit, String name) {
-        System.out.println("Program Unit: " + progUnit.getName());
+        System.out.println("Program Unit: " + progUnit.getName() + progUnit.getProgramUnitText());
     }
 
     private void printTriggerNameAndText(Trigger trigger, String name) {

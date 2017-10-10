@@ -12,7 +12,8 @@ import java.util.Collection;
 public class OracleService {
     private ConnectionProvider connectionProvider;
 
-    private static final String INSERT_MODUL = "INSERT INTO smet_moduli_obuka(sifra, oznaka, naziv) VALUES(?,'FMB',?)";
+    private static final String INSERT_MODUL = "INSERT INTO smet_moduli_obuka(id, sifra, oznaka, naziv) VALUES(?, ?, 'FMB', ?)";
+
 
     public OracleService(ConnectionProvider connectionProvider) {
         this.connectionProvider = connectionProvider;
@@ -21,7 +22,6 @@ public class OracleService {
     public void saveModul(String sifra, String naziv) {
         Connection connection = null;
         PreparedStatement insertStatement = null;
-        ResultSet rs = null;
 
         int count;
         try {
@@ -29,9 +29,11 @@ public class OracleService {
 
             insertStatement = connection.prepareStatement(INSERT_MODUL);
             insertStatement.clearParameters();
-            insertStatement.setString(1, sifra.toUpperCase());
-            insertStatement.setString(2, naziv);
-            insertStatement.execute();
+            insertStatement.setLong(1, 4);
+            insertStatement.setString(2, "BBBB");
+            insertStatement.setString(3, "BBbbb");
+          //  insertStatement.setString(3, "FMB");
+            insertStatement.executeUpdate();
 
             System.out.println("Spremljen modul " + sifra);
 
@@ -39,8 +41,6 @@ public class OracleService {
             System.out.println(e.toString());
         } finally {
             try {
-                if (null != rs)
-                    rs.close();
                 if (null != insertStatement)
                     insertStatement.close();
             } catch (SQLException e) {

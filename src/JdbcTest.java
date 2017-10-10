@@ -9,7 +9,9 @@ public class JdbcTest {
 
     private static String statementCreateTableSQL = "CREATE TABLE JDBC_TEST("
             + "ID NUMBER(5) NOT NULL, "
-            + "USERNAME VARCHAR(20) NOT NULL, " + "PRIMARY KEY (ID) "
+            + "USERNAME VARCHAR(20) NOT NULL, "
+            + "USERNAME2 VARCHAR(20), "
+            + "PRIMARY KEY (ID) "
             + ")";
 
 
@@ -29,14 +31,31 @@ public class JdbcTest {
     private static String callableStatementCallProcedure = "{CALL insertJDBC_TEST (?, ?)}";
 
     private static String preparedStatementInsertSQL = "INSERT into JDBC_TEST"
-            + "(ID, username) VALUES (?,?)";
+            + "(ID, username, username2) VALUES (?,?, ?)";
+
+/*
+    There are three different kinds of statements:
+
+    Statement: Used to implement simple SQL statements with no parameters.
+    PreparedStatement: (Extends Statement.) Used for precompiling SQL statements that might contain input parameters. See Using Prepared Statements for more information.
+    CallableStatement: (Extends PreparedStatement.) Used to execute stored procedures that may contain both input and output parameters. See Stored Procedures for more information.
+
+    To execute a query, call an execute method from Statement such as the following:
+
+    execute: Returns true if the first object that the query returns is a ResultSet object. Use this method if the query could return one or more ResultSet objects. Retrieve the ResultSet objects returned from the query by repeatedly calling Statement.getResultSet.
+    executeQuery: Returns one ResultSet object.
+    executeUpdate: Returns an integer representing the number of rows affected by the SQL statement. Use this method if you are using INSERT, DELETE, or UPDATE SQL statements.
+
+*/
 
 
     public static void main(String[] args) {
-        ConnectionProvider connectionProvider = new ConnectionProvider("iii-razvoj", "1521", "ORCL", "i3razvoj", "razvoj");
+        ConnectionProvider connectionProvider = new ConnectionProvider("iii-oracle-test", "1521", "ORCL", "i3centar", "centar");
 
         try {
             printMetadata(connectionProvider);
+
+            statementDropOnEnd(connectionProvider);
 
             /* Used to implement simple SQL statements with no parameters. */
             statementExample(connectionProvider);
@@ -47,13 +66,35 @@ public class JdbcTest {
             /* Used to execute stored procedures that may contain both input and output parameters. */
             callableStatementExample(connectionProvider);
 
+            /* Resultset example */
+            viewTable(connectionProvider);
+
             /* Oèisti bazu na kraju */
-            statementDropOnEnd(connectionProvider);
+           // statementDropOnEnd(connectionProvider);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         connectionProvider.closeSafely();
+    }
+
+    private static void viewTable(ConnectionProvider connectionProvider)  throws SQLException {
+        Statement statement = null;
+        String query = "select * FROM JDBC_TEST";
+        try {
+            statement = connectionProvider.getConnection().createStatement();
+            ResultSet rs = statement.executeQuery(query);
+            while (rs.next()) {
+                int id = rs.getInt("ID");
+                String username = rs.getString("USERNAME");
+                String username2 = rs.getString("USERNAME2");
+                System.out.println(id + "  " + username + "  " + username2);
+            }
+        } catch (SQLException e ) {
+            e.printStackTrace();
+        } finally {
+            if (statement != null) { statement.close(); }
+        }
     }
 
     private static void statementExample(ConnectionProvider connectionProvider) throws SQLException {
@@ -103,6 +144,7 @@ public class JdbcTest {
             pstmt = connection.prepareStatement(preparedStatementInsertSQL);
             pstmt.setInt(1, 87);
             pstmt.setString(2, "Picard");
+            pstmt.setString(3, "Richard");
             int rowsInserted = pstmt.executeUpdate();
 
             System.out.println(rowsInserted + " Record is inserted into JDBC_TEST table!");

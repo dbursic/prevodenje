@@ -74,7 +74,6 @@ public class ReportRosstringExtractor extends CommandExecutor {
                         ">>
                         END
 */
-
                     while ((newLine = br.readLine()) != null) {
                         if (newLine.startsWith("<<\"")) break;
                     }
@@ -100,10 +99,7 @@ public class ReportRosstringExtractor extends CommandExecutor {
 
 
     public static void main(String[] args) {
-
         ReportRosstringExtractor reportRosstringExtractor = new ReportRosstringExtractor(new File("D:\\mish_cvs\\misH_moduli"), "PKA");
-        reportRosstringExtractor.setReport(true);
-
         reportRosstringExtractor.execute("rec5010.rex");
 
     }
