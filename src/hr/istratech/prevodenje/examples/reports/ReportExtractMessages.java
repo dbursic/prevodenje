@@ -17,10 +17,13 @@ public class ReportExtractMessages extends CommandExecutor {
         super(sourcePath, aplikacija);
     }
 
-    public void obradiDioKoda(String fileText, String name) {
+    public void obradiDioKoda(String reportCode, String reportName) {
+
+        System.out.println("Pretražujem " + reportCode);
+
         // pra_zmp_zaj.porjez pra_zmp_zaj.poruka
         Pattern patternPraZmpZaj = Pattern.compile("(?u)(?m)(?s)pra_zmp_zaj.por\\w\\w\\w[ \n\r]*\\([ \n\r]*(.+?)[ \n\r]*,[ \n\r]*(.+?)[ \n\r]*[,\\)]");
-        Matcher matcherPraZmpZaj = patternPraZmpZaj.matcher(fileText);
+        Matcher matcherPraZmpZaj = patternPraZmpZaj.matcher(reportCode);
 
         while (matcherPraZmpZaj.find()) {
             String apl = matcherPraZmpZaj.group(1).toUpperCase();
@@ -30,13 +33,12 @@ public class ReportExtractMessages extends CommandExecutor {
         }
     }
 
-
     @Override
-    public void execute(String name) {
+    public void execute(String reportName) {
         String thisLine;
         String newLine;
 
-        String fileText = "";
+        String reportCode = "";
 
         boolean startDefine = false;
         boolean startCode = false;
@@ -44,7 +46,7 @@ public class ReportExtractMessages extends CommandExecutor {
         try {
             BufferedReader br =
                     new BufferedReader(
-                            new InputStreamReader(new FileInputStream(sourcePath + "\\" + name),
+                            new InputStreamReader(new FileInputStream(sourcePath + "\\" + reportName),
                                     "CP1250"));
 
             while ((thisLine = br.readLine()) != null) {
@@ -54,19 +56,23 @@ public class ReportExtractMessages extends CommandExecutor {
                     startCode = true;
 
                 if (startCode)
-                    fileText += thisLine + "\r\n";
+                    reportCode += thisLine + "\r\n";
 
                 if (thisLine.contains("\">>") && startCode && startDefine) {
-                    obradiDioKoda(fileText, name);
+                    obradiDioKoda(reportCode, reportName);
                     startDefine = false;
                     startCode = false;
-                    fileText = "";
+                    reportCode = "";
                 }
             }
             br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public static void main(String[] args) {
+        ReportExtractMessages reportExtractMessages = new ReportExtractMessages(new File("D:\\mish_cvs\\misH_moduli"), "PKA");
+        reportExtractMessages.execute("rec2250.rex");
     }
 }

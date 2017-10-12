@@ -1,7 +1,4 @@
-import oracle.forms.jdapi.Alert;
-import oracle.forms.jdapi.FormModule;
-import oracle.forms.jdapi.Jdapi;
-import oracle.forms.jdapi.JdapiIterator;
+import oracle.forms.jdapi.*;
 
 import java.io.File;
 import java.sql.*;
@@ -24,13 +21,16 @@ public class MainTest {
 
 //        changeFormTitle(sourceDirectory, filename, formModule, formModuleNameTitle);
 
-//        saveToDatabase(formModuleName, formModuleNameTitle);
+        saveToDatabase(formModuleName, formModuleNameTitle);
 
-//        readFromDatabase();
+        readFromDatabase();
 
         System.out.println("Datoteka: " + filename + "; Forma:" + formModuleName + "; Naslov:" + formModuleNameTitle);
 
         readFormProperties(formModule);
+
+        /// zadatak: sve vidljive lable/prompt na formi zamijeniti sa X
+        changeFormProperties(formModule, sourceDirectory, filename);
 
         Jdapi.shutdown();
     }
@@ -41,6 +41,42 @@ public class MainTest {
             Alert alert = (Alert) alerts.next();
             System.out.println("Alert: " + alert.getName() + " " + alert.getTitle());
         }
+
+        Alert x = Alert.find(formModule, "CFG_ERROR");
+        System.out.println("Korištenje find metode: " + x.getTitle());
+    }
+
+    private static void changeFormProperties(FormModule formModule, File sourceDirectory, String filename) {
+        JdapiIterator blocks = formModule.getBlocks();
+        while (blocks.hasNext()) {
+            Block block = (Block) blocks.next();
+            System.out.println("Block: " + block.getName());
+            JdapiIterator items = block.getItems();
+            while (items.hasNext()) {
+                Item item = (Item) items.next();
+                if (item.getPrompt() != null && !item.getPrompt().equals("")) {
+                    System.out.println("Item: " + item.getName() + "  " + item.getPrompt());
+                    item.setPrompt("X");
+                }
+            }
+        }
+
+        JdapiIterator canvases = formModule.getCanvases();
+        while (canvases.hasNext()) {
+            Canvas canvas = (Canvas) canvases.next();
+            System.out.println("Canvas: " + canvas.getName());
+
+            JdapiIterator tabPages = canvas.getTabPages();
+            while (tabPages.hasNext()) {
+                TabPage tabPage = (TabPage) tabPages.next();
+                if (tabPage.getLabel() != null && !tabPage.getLabel().equals("")) {
+                    System.out.println("TabPage: " + tabPage.getName());
+                    tabPage.setLabel("X");
+                }
+            }
+        }
+
+        formModule.save(sourceDirectory.getPath() + "/" + filename);
     }
 
     private static void readFromDatabase() {
@@ -54,7 +90,7 @@ public class MainTest {
             ResultSet resultSet = selectStatement.executeQuery("SELECT * FROM smet_moduli_obuka");
 
             int i = 1;
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 System.out.println(i++ + " redak: " + resultSet.getString(1) + " " + resultSet.getString(2) + " " + resultSet.getString(3));
             }
 
@@ -112,7 +148,7 @@ public class MainTest {
     }
 
     private static void changeFormTitle(File sourceDirectory, String filename, FormModule formModule, String formModuleNameTitle) {
-        formModule.setTitle(formModuleNameTitle + " (changed)");
+        formModule.setTitle(formModuleNameTitle);
         formModule.save(sourceDirectory.getPath() + "/" + filename);
     }
 

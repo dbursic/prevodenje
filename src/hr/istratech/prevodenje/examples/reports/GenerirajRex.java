@@ -21,7 +21,7 @@ public class GenerirajRex extends CommandExecutor {
     @Override
     public void execute() {
         BufferedWriter wrBatFile = null;
-
+        // rwcon60  userid=i3centar/centar@i3centar STYPE=RDFFILE SOURCE=pka2010.rdf DTYPE=REXFILE DEST=pka2010.rex batch=YES
         try {
             wrBatFile = new BufferedWriter(new FileWriter(sourcePath.getPath() + "/" + "convertToRex" + aplikacija + ".bat", true));
 

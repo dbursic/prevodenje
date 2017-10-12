@@ -34,6 +34,7 @@ public class JdbcTest {
             + "(ID, username, username2) VALUES (?,?, ?)";
 
 /*
+
     There are three different kinds of statements:
 
     Statement: Used to implement simple SQL statements with no parameters.
@@ -66,11 +67,11 @@ public class JdbcTest {
             /* Used to execute stored procedures that may contain both input and output parameters. */
             callableStatementExample(connectionProvider);
 
-            /* Resultset example */
+            /* ResultSet example */
             viewTable(connectionProvider);
 
             /* Oèisti bazu na kraju */
-           // statementDropOnEnd(connectionProvider);
+            // statementDropOnEnd(connectionProvider);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,7 +79,7 @@ public class JdbcTest {
         connectionProvider.closeSafely();
     }
 
-    private static void viewTable(ConnectionProvider connectionProvider)  throws SQLException {
+    private static void viewTable(ConnectionProvider connectionProvider) throws SQLException {
         Statement statement = null;
         String query = "select * FROM JDBC_TEST";
         try {
@@ -90,10 +91,12 @@ public class JdbcTest {
                 String username2 = rs.getString("USERNAME2");
                 System.out.println(id + "  " + username + "  " + username2);
             }
-        } catch (SQLException e ) {
+        } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (statement != null) { statement.close(); }
+            if (statement != null) {
+                statement.close();
+            }
         }
     }
 

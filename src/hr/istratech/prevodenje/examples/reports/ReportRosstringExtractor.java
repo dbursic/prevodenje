@@ -86,7 +86,6 @@ public class ReportRosstringExtractor extends CommandExecutor {
                     }
 
                     String hex = convertToStringFromHexadecimal(newLine.trim());
-
                     System.out.println("Report: " + name + " Labela: " + hex);
                 }
             }
@@ -97,10 +96,8 @@ public class ReportRosstringExtractor extends CommandExecutor {
 
     }
 
-
     public static void main(String[] args) {
         ReportRosstringExtractor reportRosstringExtractor = new ReportRosstringExtractor(new File("D:\\mish_cvs\\misH_moduli"), "PKA");
         reportRosstringExtractor.execute("rec5010.rex");
-
     }
 }
